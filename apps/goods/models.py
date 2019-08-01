@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
-from apps.DjangoUeditor.models import UEditorField
-# Create your models here.
+from DjangoUeditor.models import UEditorField
+
 class GoodsCategory(models.Model):
     """
     商品类别
