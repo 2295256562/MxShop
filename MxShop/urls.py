@@ -28,9 +28,10 @@ router.register(r'goods', GoodsViewSets, base_name='goods')
 
 urlpatterns = [
     re_path('xadmin/', xadmin.site.urls),
-
+    re_path(r'^api-auth/', include('rest_framework.urls')),
     # 商品列表
     # re_path(r'goods/',GoodsView.as_view(), name="good_list"),
     re_path(r'^', include(router.urls)),
-    re_path(r'docs/', include_docs_urls(title="慕学生鲜"))
+    re_path(r'docs/', include_docs_urls(title="慕学生鲜")),
+
 ]

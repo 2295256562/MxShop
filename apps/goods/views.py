@@ -7,6 +7,9 @@ from goods import models
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
+from django_filters.rest_framework import DjangoFilterBackend
+from goods.filter import GoodsFilter
+from rest_framework import filters
 
 
 # class GoodsView(APIView):
@@ -23,7 +26,15 @@ class GoodSetPagination(PageNumberPagination):
     page_query_param = 'p'
     max_page_size = 100
 
+
 class GoodsViewSets(mixins.ListModelMixin, GenericViewSet):
+    """
+    商品列表页, 分页，搜搜，过滤，排序
+    """
     queryset = models.Goods.objects.all()
     serializer_class = serializers.GoodsSerializers
     pagination_class = GoodSetPagination
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_class = GoodsFilter
+    search_fields = ('name', 'goods_brief')
+    ordering_fields = ('sold_num', 'add_time')
