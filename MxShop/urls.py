@@ -16,15 +16,16 @@ Including another URLconf
 
 from django.urls import include, re_path
 from rest_framework import routers
-
+from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 from MxShop.settings import MIDDLEWARE
 from rest_framework.documentation import include_docs_urls
 from django.views.static import serve
-from goods.views import GoodsViewSets
-
+from goods.views import GoodsViewSets, CategoryViewSets
+from rest_framework.authtoken import views
 router = routers.SimpleRouter()
 router.register(r'goods', GoodsViewSets, base_name='goods')
+router.register(r'categorys', CategoryViewSets, base_name='category')
 
 urlpatterns = [
     re_path('xadmin/', xadmin.site.urls),
@@ -34,4 +35,9 @@ urlpatterns = [
     re_path(r'^', include(router.urls)),
     re_path(r'docs/', include_docs_urls(title="慕学生鲜")),
 
+    # drf自带的token认证模式
+    re_path(r'^api-token-auth/', views.obtain_auth_token),
+
+    # jwt接口认证
+    re_path(r'^login/', obtain_jwt_token),
 ]

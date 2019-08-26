@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from goods import serializers
@@ -21,7 +22,7 @@ from rest_framework import filters
 #         return Response(res)
 
 class GoodSetPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 12
     page_size_query_param = 'page_size'
     page_query_param = 'p'
     max_page_size = 100
@@ -34,7 +35,17 @@ class GoodsViewSets(mixins.ListModelMixin, GenericViewSet):
     queryset = models.Goods.objects.all()
     serializer_class = serializers.GoodsSerializers
     pagination_class = GoodSetPagination
+    # authentication_classes = (TokenAuthentication,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = GoodsFilter
-    search_fields = ('name', 'goods_brief')
-    ordering_fields = ('sold_num', 'add_time')
+    search_fields = ('name', 'goods_brief', 'goods_desc')
+    ordering_fields = ('sold_num', 'shop_price')
+
+
+class CategoryViewSets(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
+    """
+    list:
+        商品分类列表数据
+    """
+    queryset = models.GoodsCategory.objects.filter(category_type=1)
+    serializer_class = serializers.CategorySerializers
